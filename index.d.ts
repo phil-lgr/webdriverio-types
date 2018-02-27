@@ -333,6 +333,7 @@ declare namespace WebdriverIO {
         currentTest: string;
         passed: boolean;
         duration: any;
+        fullName: string;
     }
 
     interface Hooks<T> {
