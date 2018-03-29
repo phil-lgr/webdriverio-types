@@ -1,6 +1,4 @@
-/* tslint:disable */
-
-// Type definitions for WebdriverIO 4.10
+// Type definitions for WebdriverIO 4.12
 // Project: http://www.webdriver.io/
 // Definitions by: Nick Malaguti <https://github.com/nmalaguti>
 //                 Tim Brust <https://github.com/timbru31>
@@ -8,6 +6,7 @@
 //                 Tanvir ul Islam <https://github.com/tanvirislam06>
 //                 Phil Leger <https://github.com/phil-lgr>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+// TypeScript Version: 2.3
 
 /// <reference types="node"/>
 
@@ -245,6 +244,7 @@ declare namespace WebdriverIO {
         changeMaxConnections?: boolean;
         profile?: string;
         pageLoadingStrategy?: string;
+        'moz:firefoxOptions'?: any;
 
         // IE specific
         'ie.forceCreateProcessApi'?: boolean;
@@ -336,66 +336,66 @@ declare namespace WebdriverIO {
         fullName: string;
     }
 
-    interface Hooks<T> {
-        onError?(error: Error): Promise<T> & undefined;
+    interface Hooks<T = void> {
+        onError?<T>(error: Error): Promise<T> & undefined;
 
-        onPrepare?(
+        onPrepare?<T>(
             config: Options,
             capabilities: DesiredCapabilities
         ): Promise<T> & undefined;
 
-        onComplete?(exitCode: number): Promise<T> & undefined;
+        onComplete?<T>(exitCode: number): Promise<T> & undefined;
 
-        before?(
+        before?<T>(
             capabilities: DesiredCapabilities,
             specs: string[]
         ): Promise<T> & undefined;
 
-        beforeCommand?(
+        beforeCommand?<T>(
             commandName: string,
             args: any[]
         ): Promise<T> & undefined;
 
-        beforeFeature?(feature: string): Promise<T> & undefined;
-        beforeHook?(): Promise<T> & undefined;
-        beforeScenario?(scenario: string): Promise<T> & undefined;
+        beforeFeature?<T>(feature: string): Promise<T> & undefined;
+        beforeHook?<T>(): Promise<T> & undefined;
+        beforeScenario?<T>(scenario: string): Promise<T> & undefined;
 
-        beforeSession?(
+        beforeSession?<T>(
             config: Options,
             capabilities: DesiredCapabilities,
             specs: string[]
         ): Promise<T> & undefined;
 
-        beforeStep?(step: string): Promise<T> & undefined;
-        beforeSuite?(suite: Suite): Promise<T> & undefined;
-        beforeTest?(test: Test): Promise<T> & undefined;
-        afterHook?(): Promise<T> & undefined;
+        beforeStep?<T>(step: string): Promise<T> & undefined;
+        beforeSuite?<T>(suite: Suite): Promise<T> & undefined;
+        beforeTest?<T>(test: Test): Promise<T> & undefined;
+        afterHook?<T>(): Promise<T> & undefined;
 
-        after?(
+        after?<T>(
             result: number,
             capabilities: DesiredCapabilities,
             specs: string[]
         ): Promise<T> & undefined;
 
-        afterCommand?(
+        afterCommand?<T>(
             commandName: string,
             args: any[],
             result: any,
             error?: Error
         ): Promise<T> & undefined;
 
-        afterScenario?(scenario: any): Promise<T> & undefined;
+        afterScenario?<T>(scenario: any): Promise<T> & undefined;
 
-        afterSession?(
+        afterSession?<T>(
             config: Options,
             capabilities: DesiredCapabilities,
             specs: string[]
         ): Promise<T> & undefined;
 
-        afterStep?(stepResult: any): Promise<T> & undefined;
-        afterSuite?(suite: Suite): Promise<T> & undefined;
-        afterTest?(test: Test): Promise<T> & undefined;
-        afterFeature?(feature: string): Promise<T> & undefined;
+        afterStep?<T>(stepResult: any): Promise<T> & undefined;
+        afterSuite?<T>(suite: Suite): Promise<T> & undefined;
+        afterTest?<T>(test: Test): Promise<T> & undefined;
+        afterFeature?<T>(feature: string): Promise<T> & undefined;
     }
 
     interface Options {
@@ -431,6 +431,8 @@ declare namespace WebdriverIO {
         screenshotPath?: string;
         specs?: string[];
         seleniumLogs?: string;
+        seleniumInstallArgs?: any;
+        seleniumArgs?: any;
         suites?: { [name: string]: string[]; };
         sync?: boolean;
         waitforTimeout?: number;
@@ -447,7 +449,7 @@ declare namespace WebdriverIO {
         [name: string]: Options;
     }
 
-    interface Config<T> extends Options, Hooks<T> { }
+    interface Config extends Options, Hooks { }
 
     interface Client<T> {
         desiredCapabilities: DesiredCapabilities;
@@ -467,8 +469,8 @@ declare namespace WebdriverIO {
         run(): Promise<any>;
     }
 
-    class ErrorHandler {
-        constructor(type: string, msg: string | number);
+    class ErrorHandler extends Error {
+        constructor(type: string, msg: string | number, details?: string);
     }
 
     function multiremote(options: MultiRemoteOptions): Client<void>;
